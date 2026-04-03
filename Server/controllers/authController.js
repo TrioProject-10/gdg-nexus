@@ -1,0 +1,56 @@
+import { db } from "../config/firebase.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+
+export const signup = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+
+    const hashed = await bcrypt.hash(password, 10);
+
+    const userRef = db.collection("users").doc();
+
+    await userRef.set({
+      name,
+      email,
+      password: hashed,
+      createdAt: new Date(),
+    });
+
+    res.status(201).json({ message: "User created" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const snapshot = await db.collection("users")
+      .where("email", "==", email).get();
+
+    if (snapshot.empty) {
+      return res.status(400).json({ error: "User not found" });
+    }
+
+    const user = snapshot.docs[0];
+    const data = user.data();
+
+    const isMatch = await bcrypt.compare(password, data.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ error: "Invalid credentials" });
+    }
+
+    const token = jwt.sign(
+      { id: user.id },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    res.json({ token });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
