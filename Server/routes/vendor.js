@@ -7,4 +7,4 @@ const router = express.Router();
 router.post("/product", protect, addProduct);
 router.get("/products", protect, getVendorProducts);
 
-export default router;.
+export default router;

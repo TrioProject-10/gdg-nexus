@@ -23,4 +23,4 @@ export const getVendorProducts = async (req, res) => {
   const products = snapshot.docs.map(doc => doc.data());
 
   res.json(products);
-};.
+};

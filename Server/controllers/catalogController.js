@@ -14,4 +14,4 @@ export const getAllProducts = async (req, res) => {
 export const getProduct = async (req, res) => {
   const doc = await db.collection("products").doc(req.params.id).get();
   res.json(doc.data());
-};.
+};
