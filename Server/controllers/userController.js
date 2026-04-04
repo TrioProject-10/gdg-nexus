@@ -8,4 +8,4 @@ export const getProfile = async (req, res) => {
 export const updateProfile = async (req, res) => {
   await db.collection("users").doc(req.user.id).update(req.body);
   res.json({ message: "Profile updated" });
-};
+};.

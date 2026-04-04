@@ -6,4 +6,4 @@ const router = express.Router();
 router.get("/", getAllProducts);
 router.get("/:id", getProduct);
 
-export default router;
+export default router;.
